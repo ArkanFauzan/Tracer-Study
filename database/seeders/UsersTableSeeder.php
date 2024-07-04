@@ -21,6 +21,7 @@ class UsersTableSeeder extends Seeder
             'name' => env('DEFAULT_ADMIN_NAME', 'Admin'),
             'email' => env('DEFAULT_ADMIN_EMAIL', 'admin@example.com'),
             'password' => Hash::make(env('DEFAULT_ADMIN_PASSWORD', 'password123')),
+            'created_at' => date('Y-m-d H:i:s')
         ];
 
         // Check if the specific user already exists
