@@ -17,13 +17,14 @@ class UsersTableSeeder extends Seeder
     {
         // Define the specific user to seed
         $specificUser = [
+            'id' => '68f5df87-9bf2-4388-bdeb-0201108aa6a8',
             'name' => env('DEFAULT_ADMIN_NAME', 'Admin'),
             'email' => env('DEFAULT_ADMIN_EMAIL', 'admin@example.com'),
             'password' => Hash::make(env('DEFAULT_ADMIN_PASSWORD', 'password123')),
         ];
 
         // Check if the specific user already exists
-        $existingUser = DB::table('users')->where('email', $specificUser['email'])->first();
+        $existingUser = DB::table('users')->where('id', $specificUser['id'])->first();
 
         if ($existingUser === null) {
             // Insert the specific user into the database
