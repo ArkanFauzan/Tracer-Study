@@ -20,7 +20,8 @@ class ResponseGraduateQuestionAnswer extends Model
      */
     protected $fillable = [
         'response_graduate_question_id',
-        'question_option_id'
+        'question_option_id',
+        'can_freetext_answer'
     ];
 
     /**

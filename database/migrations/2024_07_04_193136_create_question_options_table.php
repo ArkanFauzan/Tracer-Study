@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('question_options', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('option');
+            $table->boolean('can_freetext')->default(false);
             $table->foreignUuid('question_id')
                     ->references('id')
                     ->on('questions')

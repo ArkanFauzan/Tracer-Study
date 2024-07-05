@@ -24,6 +24,7 @@ return new class extends Migration
                     ->on('question_options')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
+            $table->longText('can_freetext_answer')->nullable();
             $table->timestamps();
         });
     }
