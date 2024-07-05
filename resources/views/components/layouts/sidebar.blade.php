@@ -12,10 +12,16 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item {{ Request::is('dashboard') ? 'active' : '' }}">
+    <li class="nav-item {{ Route::is('dashboard') ? 'active' : '' }}">
         <a class="nav-link" href="{{route('dashboard')}}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
+    </li>
+
+    <li class="nav-item {{ Route::is('tracers.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{route('tracers.index')}}">
+            <i class="fas fa-fw fa-id-card"></i>
+            <span>Tracers</span></a>
     </li>
 
     <!-- Sidebar Toggler (Sidebar) -->

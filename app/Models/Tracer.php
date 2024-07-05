@@ -41,7 +41,7 @@ class Tracer extends Model
     protected function casts(): array
     {
         return [
-            'valid_until' => 'datetime',
+            'valid_until' => 'datetime:Y-m-d',
         ];
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TracerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -15,9 +16,10 @@ Route::middleware('auth')->group(function () {
     Route::prefix('dashboard')->group(function () {
 
         Route::get('/', function () {
-            return view('dashboard', ['title' => 'ini dashboard']);
+            return view('dashboard.index', ['title' => 'Dashboard']);
         })->middleware(['auth', 'verified'])->name('dashboard');
         
+        Route::resource('tracers', TracerController::class);
     });
 });
 
