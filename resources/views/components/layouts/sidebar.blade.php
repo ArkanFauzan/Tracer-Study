@@ -18,13 +18,6 @@
             <span>Dashboard</span></a>
     </li>
 
-    <!-- Nav Item - Dashboard -->
-    <li class="nav-item  {{ Request::is('dashboard2') ? 'active' : '' }}">
-        <a class="nav-link" href="{{route('dashboard2')}}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard 2</span></a>
-    </li>
-
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
