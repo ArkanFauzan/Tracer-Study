@@ -20,7 +20,8 @@ class Tracer extends Model
      */
     protected $fillable = [
         'name',
-        'description'
+        'description',
+        'valid_until'
     ];
 
     /**
