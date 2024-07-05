@@ -91,10 +91,14 @@ class QuestionOptionsTableSeeder extends Seeder
     private function seedQuestionOption() {
         $questionWithOption = $this->getQuestionWithOption();
         $options = [];
+        $time = time();
         foreach ($questionWithOption as $question) {
             foreach ($question['options'] as $option) {
                 $option['question_id'] = $question['id'];
+                $option['created_at'] = date('Y-m-d H:i:s', $time);
                 $options[] = $option;
+
+                $time++; // for ordering option by created at
             }
         }
 
