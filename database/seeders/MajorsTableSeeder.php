@@ -15,7 +15,7 @@ class MajorsTableSeeder extends Seeder
      */
     public function run()
     {
-        // Check if the specific user already exists
+        // Check if the data already exists
         $count = DB::table('majors')->count();
 
         if ($count === 0) {

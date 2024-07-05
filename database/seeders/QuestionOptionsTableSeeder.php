@@ -13,7 +13,7 @@ class QuestionOptionsTableSeeder extends Seeder
      */
     public function run(): void
     {
-        // Check if the specific user already exists
+        // Check if the data already exists
         $count = DB::table('question_options')->count();
 
         if ($count === 0) {
