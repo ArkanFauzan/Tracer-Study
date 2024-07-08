@@ -41,7 +41,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <strong>Valid Until:</strong>
-                    <input type="date" name="valid_until" value="{{ $tracer->valid_until->format('Y-m-d') }}" class="form-control" placeholder="Valid until" min="{{date('Y-m-d')}}">
+                    <input type="date" name="valid_until" value="{{ $tracer->valid_until->format('Y-m-d') }}" class="form-control" placeholder="Valid until">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
