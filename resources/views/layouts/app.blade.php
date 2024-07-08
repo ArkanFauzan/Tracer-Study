@@ -26,6 +26,10 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    @isset($pageCSS)
+        {{$pageCSS}}
+    @endisset
+
 </head>
 
 <body id="page-top">

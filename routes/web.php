@@ -23,7 +23,9 @@ Route::middleware('auth')->group(function () {
             return view('dashboard.index', ['title' => 'Dashboard']);
         })->middleware(['auth', 'verified'])->name('dashboard');
         
+        Route::get('tracers/datatable', [TracerController::class, 'datatable'])->name('tracers.datatable');
         Route::resource('tracers', TracerController::class);
+
     });
 });
 
