@@ -29,5 +29,15 @@
                 {{ $tracer->valid_until->format('Y-m-d H:i:s') }}
             </div>
         </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+                <a class="btn btn-info btn-sm" href="{{ route('form.tracerStudy', $tracer->id) }}" target="_blank" title="Form Tracer Study">Form Tracer Study</a>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+                <a class="btn btn-info btn-sm" href="{{ route('form.tracerStudy', $tracer->id) }}" target="_blank" title="Form User Satisfaction">Form User Satisfaction</a>
+            </div>
+        </div>
     </div>
 </x-app-layout>?

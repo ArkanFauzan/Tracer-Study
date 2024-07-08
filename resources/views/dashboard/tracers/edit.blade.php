@@ -29,7 +29,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <strong>Title:</strong>
-                    <input type="text" name="name" maxlength="250" value="{{ $tracer->name }}" class="form-control" placeholder="Title">
+                    <input type="text" name="name" maxlength="250" value="{{ $tracer->name }}" class="form-control" placeholder="Title" required>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
@@ -41,7 +41,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <strong>Valid Until:</strong>
-                    <input type="date" name="valid_until" value="{{ $tracer->valid_until->format('Y-m-d') }}" class="form-control" placeholder="Valid until">
+                    <input type="date" name="valid_until" value="{{ $tracer->valid_until->format('Y-m-d') }}" class="form-control" placeholder="Valid until" required>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">

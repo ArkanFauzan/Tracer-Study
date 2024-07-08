@@ -28,7 +28,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <strong>Title:</strong>
-                    <input type="text" name="name" maxlength="250" class="form-control" placeholder="Title">
+                    <input type="text" name="name" maxlength="250" class="form-control" required placeholder="Title">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
@@ -40,7 +40,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <strong>Valid Until:</strong>
-                    <input type="date" name="valid_until" class="form-control" placeholder="Valid until" min="{{date('Y-m-d')}}">
+                    <input type="date" name="valid_until" class="form-control" placeholder="Valid until" required min="{{date('Y-m-d')}}">
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">

@@ -114,6 +114,10 @@
     <script src="{{asset('js/demo/chart-area-demo.js')}}"></script>
     <script src="{{asset('js/demo/chart-pie-demo.js')}}"></script>
 
+    @isset($pageScript)
+        {{$pageScript}}
+    @endisset
+
 </body>
 
 </html>
