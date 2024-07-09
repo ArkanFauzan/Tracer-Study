@@ -86,7 +86,7 @@
     
                 if (deleteBtns) {
                     for (let i = 0; i < deleteBtns.length; i++) {
-                        deleteBtns[i].addEventListener('click', confirmDelete)
+                        deleteBtns[i].addEventListener('click', e => confirmDelete(e))
                     }
                 }
             }
