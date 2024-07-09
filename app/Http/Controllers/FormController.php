@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\Tracer;
 use App\Models\UserSatisfactionIndicator;
@@ -84,8 +85,65 @@ class FormController extends Controller
 
     public function userSatisfactionResult(Request $request)
     {
+        $result = [
+            'indicators' => [],
+            'options' => [], // raw totalCount each option indicator
+            'indicatorsTotalSubmit' => [], // totalSubmit each indicator (from all options)
+            'optionsPercentage' => [], // each option indicator : indicatorTotalSubmit * 100
+        ];
 
-        return view('dashboard.userSatisfaction.index', ['title' => 'User Satisfaction']);
+        $indicators = UserSatisfactionIndicator::orderBy('created_at', 'ASC')->get();
+        foreach ($indicators as $indicator) {
+            $result['indicators'][$indicator->id] = $indicator->name;
+        }
+
+        $options = UserSatisfactionOption::orderBy('created_at', 'ASC')->get();
+        foreach ($options as $idx => $option) {
+            $result['options'][$idx] = [
+                'id' => $option->id,
+                'option' => $option->option,
+                'data' => [] // format: 'indicator_id' => totalCount
+            ];
+
+            // defalut totalCount each indicator (0)
+            foreach (array_keys($result['indicators']) as $indicator_id) {
+                $result['options'][$idx]['data'][$indicator_id] = 0;
+            }
+
+            // replace with actual form value response
+            $userSatisfactionResponseValues = UserSatisfactionResponseValue::select(DB::raw('count(*) as total, user_satisfaction_indicator_id'))->where('user_satisfaction_option_id', $option->id)->groupBy('user_satisfaction_indicator_id')->get();
+            foreach ($userSatisfactionResponseValues as $val) {
+                $result['options'][$idx]['data'][$val->user_satisfaction_indicator_id] = $val->total;
+            }
+        }
+
+        // totalSubmit each indicator (from all options)
+        foreach (array_keys($result['indicators']) as $indicator_id) {
+            $sum = 0;
+            foreach ($result['options'] as $option) {
+                $sum += $option['data'][$indicator_id];
+            }
+            $result['indicatorsTotalSubmit'][$indicator_id] = $sum;
+        }
+
+        // calculate option percentage (each option indicator : indicatorTotalSubmit * 100) & average percent
+        $result['optionsPercentage'] = $result['options'];
+        foreach ($result['optionsPercentage'] as $i => $option) {
+            $totalPercent = 0;
+            $totalData = 0;
+            foreach ($option['data'] as $indicator_id => $val) {
+                $indicatorTotalSubmit = $result['indicatorsTotalSubmit'][$indicator_id];
+                $percent = $indicatorTotalSubmit > 0 ? $val/$indicatorTotalSubmit*100 : 0; 
+
+                $result['optionsPercentage'][$i]['data'][$indicator_id] = number_format($percent, 2, ',', '.');
+
+                $totalPercent += $percent;
+                $totalData++;
+            }
+            $result['optionsPercentage'][$i]['average'] = number_format(($totalPercent/$totalData), 2, ',', '.');
+        }
+
+        return view('dashboard.userSatisfaction.index', ['title' => 'User Satisfaction', ...compact('result')]);
     }
 
     /**

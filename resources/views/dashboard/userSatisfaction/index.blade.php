@@ -12,8 +12,7 @@
     <div class="row" style="background-color:white">
         <div class="col-lg-12 mb-4 pt-4">
 
-            <form action="{{ route('userSatisfaction.index') }}" method="POST">
-                @csrf
+            <form action="{{ route('userSatisfaction.index') }}" method="GET">
 
                 <div class="d-flex" style="column-gap: 20px">
                     <div class="form-group">
@@ -43,49 +42,27 @@
                     <tr class="bg-primary text-white">
                         <th>No</th>
                         <th>Indicator</th>
-                        <th>Sangat Tinggi</th>
-                        <th>Tinggi</th>
-                        <th>Cukup Tinggi</th>
-                        <th>Rendah</th>
-                        <th>Sangat Rendah</th>
+                        @foreach($result['optionsPercentage'] as $val)
+                            <th class="text-center">{{$val['option']}}</th>
+                        @endforeach
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Etika</td>
-                        <td>93.73</td>
-                        <td>6.27</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Kemampuan Bahasa Asing</td>
-                        <td>62</td>
-                        <td>4</td>
-                        <td>4</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Kompetensi Bidang Ilmu</td>
-                        <td>96.12</td>
-                        <td>2.44</td>
-                        <td>1.44</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr>
+                    @foreach($result['indicators'] as $indicator_id => $indicatorName)
+                        <tr>
+                            <td>{{ $loop->index + 1 }}</td>
+                            <td>{{$indicatorName}}</td>
+                            @foreach($result['optionsPercentage'] as $val)
+                                <th class="text-center">{{$val['data'][$indicator_id]}} %</th>
+                            @endforeach
+                        </tr>
+                    @endforeach
 
                     <tr class="bg-primary text-white">
                         <td colspan="2">Rata-Rata</td>
-                        <td>90.55</td>
-                        <td>4.39</td>
-                        <td>1.36</td>
-                        <td>0</td>
-                        <td>0</td>
+                        @foreach($result['optionsPercentage'] as $val)
+                            <th class="text-center">{{$val['average']}} %</th>
+                        @endforeach
                     </tr>
                 </tbody>
             </table>
