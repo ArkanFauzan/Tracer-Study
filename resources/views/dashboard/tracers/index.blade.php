@@ -72,7 +72,7 @@
             function confirmDelete(e){
                 e.preventDefault();
                 const {text} = e.target.dataset;
-                const confirm = window.confirm(`Do you want to delete "${text}"`);
+                const confirm = window.confirm(`Are you sure want to delete?`);
                 if (confirm) {
                     e.target.parentNode.submit();
                 }
