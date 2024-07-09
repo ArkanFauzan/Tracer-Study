@@ -38,7 +38,7 @@
                         <td>{{ $tracer->valid_until }}</td>
                         <td>
                             <a class="btn btn-info btn-sm" href="{{ route('form.tracerStudy', $tracer->id) }}" target="_blank" title="Form Tracer Study">Form Tracer Study</a> <br><br>
-                            <a class="btn btn-info btn-sm" href="{{ route('form.tracerStudy', $tracer->id) }}" target="_blank" title="Form User Satisfaction">Form User Satisfaction</a>
+                            <a class="btn btn-info btn-sm" href="{{ route('form.userSatisfaction', $tracer->id) }}" target="_blank" title="Form User Satisfaction">Form User Satisfaction</a>
                         </td>
                         <td>
                             <form action="{{ route('tracers.destroy', $tracer->id) }}" method="POST">

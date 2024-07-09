@@ -10,7 +10,7 @@ Route::get('/', function () {
 });
 
 Route::get('/form/tracer-study/{id}', [FormController::class, 'tracerStudy'])->name('form.tracerStudy');
-Route::get('/form/user-satisfaction/{id}', [FormController::class, 'tracerStudy'])->name('form.tracerStudy');
+Route::get('/form/user-satisfaction/{id}', [FormController::class, 'userSatisfaction'])->name('form.userSatisfaction');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

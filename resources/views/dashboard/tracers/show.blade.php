@@ -36,7 +36,7 @@
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <a class="btn btn-info btn-sm" href="{{ route('form.tracerStudy', $tracer->id) }}" target="_blank" title="Form User Satisfaction">Form User Satisfaction</a>
+                <a class="btn btn-info btn-sm" href="{{ route('form.userSatisfaction', $tracer->id) }}" target="_blank" title="Form User Satisfaction">Form User Satisfaction</a>
             </div>
         </div>
     </div>

@@ -66,7 +66,7 @@ class TracerController extends Controller
                 'valid_until' => $tracer->valid_until->format('Y-m-d H:i:s'),
                 'form_link' => '
                     <a class="btn btn-info btn-sm" href="'.route('form.tracerStudy', $tracer->id).'" target="_blank" title="Form Tracer Study">Form Tracer Study</a> <br><br>
-                    <a class="btn btn-info btn-sm" href="'.route('form.tracerStudy', $tracer->id).'" target="_blank" title="Form User Satisfaction">Form User Satisfaction</a>
+                    <a class="btn btn-info btn-sm" href="'.route('form.userSatisfaction', $tracer->id).'" target="_blank" title="Form User Satisfaction">Form User Satisfaction</a>
                 ',
                 'action' => '
                     <form action="'.route('tracers.destroy', $tracer->id).'" method="POST">
