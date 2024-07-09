@@ -17,18 +17,20 @@
                 <div class="d-flex" style="column-gap: 20px">
                     <div class="form-group">
                         <select name="tracer_id">
-                            <option value="" selected disabled>-- Pilih Tracer --</option>
-                            <option value="1">Tracer 1</option>
-                            <option value="2">Tracer 2</option>
-                            <option value="3">Tracer 3</option>
+                            <option value="" selected>-- Pilih Tracer --</option>
+                            @foreach($tracers as $tracer)
+                                <option value="{{$tracer->id}}" {{$tracer->id === $tracer_id ? 'selected' : ''}}>{{$tracer->name}}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="form-group">
                         <select name="major_id">
-                            <option value="" selected disabled>-- Pilih Major  --</option>
-                            <option value="1">D3 - Akuntansi</option>
-                            <option value="2">S1 - Teknik Informatika</option>
-                            <option value="3">S2 - Magister Teknik Informatika</option>
+                            <option value="" selected>-- Pilih Major  --</option>
+                            @foreach ($majorTypes as $majorType)
+                                @foreach ($majorType->major as $major)
+                                    <option value="{{$major->id}}">{{$majorType->name .' - '. $major->name}}</option>
+                                @endforeach
+                            @endforeach
                         </select>
                     </div>
                     <div class="form-group">

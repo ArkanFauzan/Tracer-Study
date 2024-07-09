@@ -85,6 +85,17 @@ class FormController extends Controller
 
     public function userSatisfactionResult(Request $request)
     {
+        // filter tracer
+        $tracers = Tracer::all();
+        $tracer_id = !empty($request->query()['tracer_id']) ? $request->query()['tracer_id'] : '';
+
+        // filter major
+        $majorTypes = MajorType::with(['major' => function ($query) {
+            $query->orderBy('name', 'asc');
+        }])
+        ->orderBy('created_at', 'asc')->get();
+        $major_id = !empty($request->query()['major_id']) ? $request->query()['major_id'] : '';
+
         $result = [
             'indicators' => [],
             'options' => [], // raw totalCount each option indicator
@@ -111,7 +122,17 @@ class FormController extends Controller
             }
 
             // replace with actual form value response
-            $userSatisfactionResponseValues = UserSatisfactionResponseValue::select(DB::raw('count(*) as total, user_satisfaction_indicator_id'))->where('user_satisfaction_option_id', $option->id)->groupBy('user_satisfaction_indicator_id')->get();
+            $query = UserSatisfactionResponseValue::select(DB::raw('count(*) as total, user_satisfaction_indicator_id'))->where('user_satisfaction_option_id', $option->id);
+            if (!empty($tracer_id) || !empty($major_id)) {
+                $query->join('user_satisfaction_responses', 'user_satisfaction_response_values.user_satisfaction_response_id', '=', 'user_satisfaction_responses.id');
+                if (!empty($tracer_id)) {
+                    $query->where('tracer_id', $tracer_id);
+                }
+                if (!empty($major_id)) {
+                    $query->where('major_id', $major_id);
+                }
+            }
+            $userSatisfactionResponseValues = $query->groupBy('user_satisfaction_indicator_id')->get();
             foreach ($userSatisfactionResponseValues as $val) {
                 $result['options'][$idx]['data'][$val->user_satisfaction_indicator_id] = $val->total;
             }
@@ -143,7 +164,7 @@ class FormController extends Controller
             $result['optionsPercentage'][$i]['average'] = number_format(($totalPercent/$totalData), 2, ',', '.');
         }
 
-        return view('dashboard.userSatisfaction.index', ['title' => 'User Satisfaction', ...compact('result')]);
+        return view('dashboard.userSatisfaction.index', ['title' => 'User Satisfaction', ...compact('result', 'tracer_id', 'tracers', 'major_id', 'majorTypes')]);
     }
 
     /**
