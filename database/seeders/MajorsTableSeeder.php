@@ -34,21 +34,22 @@ class MajorsTableSeeder extends Seeder
 
     private function seedMajorType() {
 
+        $time = time();
         $data = [
             [
                 'id' => 'dadfff6f-f8e3-4d6c-a9f2-3c40d09ed5a3',
                 'name' => 'D3',
-                'created_at' => date('Y-m-d H:i:s')
+                'created_at' => date('Y-m-d H:i:s', $time)
             ],
             [
                 'id' => 'a1ea26aa-46cd-4e69-aaa0-f852597a3edf',
                 'name' => 'S1',
-                'created_at' => date('Y-m-d H:i:s')
+                'created_at' => date('Y-m-d H:i:s', $time + 1)
             ],
             [
                 'id' => '3462df33-7c70-4891-a2b6-44874afab316',
                 'name' => 'S2',
-                'created_at' => date('Y-m-d H:i:s')
+                'created_at' => date('Y-m-d H:i:s', $time + 2)
             ],
         ];
 
