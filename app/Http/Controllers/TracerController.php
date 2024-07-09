@@ -16,8 +16,7 @@ class TracerController extends Controller
 
     public function datatable(Request $request)
     {
-        $query = $request->query();
-        $count = Tracer::count();
+        $requestQuery = $request->query();
 
         // idx = column order in datatable
         // value = the value is column name in database
@@ -31,27 +30,32 @@ class TracerController extends Controller
             'action'
         ];
 
-        $orderBy = null;
-        $order = null;
-        $tracers = [];
+        $queryDB = Tracer::query();
 
-        if (!empty($query['order'])) { // if exist sortable
+        // search query
+        if (!empty($requestQuery['search']['value'])) {
+            $queryDB->where(function($query) use($requestQuery) {
+                $query
+                    ->where('name', 'like', "%{$requestQuery['search']['value']}%")
+                    ->orWhere('description', 'like', "%{$requestQuery['search']['value']}%");
+            });
+        }
 
-            $orderBy = $columns[ $query['order'][0]['column'] ];
-            $order = $query['order'][0]['dir'];
+        // order query
+        if (!empty($requestQuery['order'])) { // if exist sortable
 
-            if (in_array($orderBy, ['no', 'form_link', 'action'])) { // disabled sortable
-                $orderBy = $order = null;
+            $orderBy = $columns[ $requestQuery['order'][0]['column'] ];
+            $order = $requestQuery['order'][0]['dir'];
+
+            if (! in_array($orderBy, ['no', 'form_link', 'action'])) { // not in array (allowed sortable)
+                $queryDB->orderBy($orderBy, strtoupper($order));
             }
         }
-
-        if ($orderBy && $order) {
-            $tracers = Tracer::orderBy($orderBy, strtoupper($order))->skip((int)$query['start'])->take((int)$query['length'])->get();
-        }
-        else {
-            $tracers = Tracer::skip((int)$query['start'])->take((int)$query['length'])->get();
-        }
+    
+        $countQeury = clone $queryDB;
+        $count = $countQeury->count();
         
+        $tracers = $queryDB->skip((int)$requestQuery['start'])->take((int)$requestQuery['length'])->get();
         $result = [];
 
         foreach ($tracers as $key => $tracer) {
@@ -78,7 +82,7 @@ class TracerController extends Controller
         }
 
         return response()->json([
-            'draw' => $query['draw'],
+            'draw' => $requestQuery['draw'],
             'recordsTotal' => $count,
             'recordsFiltered' => $count,
             'data' => $result
