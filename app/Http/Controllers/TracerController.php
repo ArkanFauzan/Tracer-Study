@@ -18,18 +18,6 @@ class TracerController extends Controller
     {
         $requestQuery = $request->query();
 
-        // idx = column order in datatable
-        // value = the value is column name in database
-        // modify orderable column in frontend
-        $columns = [
-            'no',
-            'name',
-            'description',
-            'valid_until',
-            'form_link',
-            'action'
-        ];
-
         $queryDB = Tracer::query();
 
         // search query
@@ -44,6 +32,18 @@ class TracerController extends Controller
         // order query
         if (!empty($requestQuery['order'])) { // if exist sortable
 
+            // idx = column order in datatable
+            // value = the value is column name in database
+            // modify orderable column in frontend
+            $columns = [
+                'no',
+                'name',
+                'description',
+                'valid_until',
+                'form_link',
+                'action'
+            ];
+            
             $orderBy = $columns[ $requestQuery['order'][0]['column'] ];
             $order = $requestQuery['order'][0]['dir'];
 
@@ -54,7 +54,7 @@ class TracerController extends Controller
     
         $countQeury = clone $queryDB;
         $count = $countQeury->count();
-        
+
         $tracers = $queryDB->skip((int)$requestQuery['start'])->take((int)$requestQuery['length'])->get();
         $result = [];
 
