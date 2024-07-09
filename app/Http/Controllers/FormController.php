@@ -78,8 +78,14 @@ class FormController extends Controller
             ]);
         }
 
-        return view('form.user_satisfaction', ['successSubmit' => true]);
+        return redirect()->route('form.userSatisfaction', $tracer->id)->with('success', 'success submitted!');
 
+    }
+
+    public function userSatisfactionResult(Request $request)
+    {
+
+        return view('dashboard.userSatisfaction.index', ['title' => 'User Satisfaction']);
     }
 
     /**

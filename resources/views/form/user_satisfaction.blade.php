@@ -8,7 +8,7 @@
         <div class="alert alert-danger">
             <strong>Invalid form or form has been expired!</strong>
         </div>
-    @elseif(!empty($successSubmit))
+    @elseif(Session('success'))
         <div class="alert alert-success">
             <strong>Form has been submitted, thank you!</strong>
         </div>
