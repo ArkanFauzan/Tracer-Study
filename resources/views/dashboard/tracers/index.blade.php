@@ -63,6 +63,9 @@
                 width: 60px;
                 margin-right: 10px;
             }
+            table th {
+                text-align: left !important;
+            }
         </style>
     </x-slot>
 
