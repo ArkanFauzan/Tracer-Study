@@ -51,4 +51,9 @@ class MajorType extends Model
             $model->id = (string) Str::uuid();
         });
     }
+
+    public function major()
+    {
+        return $this->hasMany(Major::class);
+    }
 }

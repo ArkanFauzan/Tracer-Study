@@ -8,9 +8,41 @@
         <div class="alert alert-danger">
             <strong>Invalid form or form has been expired!</strong>
         </div>
+    @elseif(!empty($successSubmit))
+        <div class="alert alert-success">
+            <strong>Form has been submitted, thank you!</strong>
+        </div>
     @else
-        <form action="{{ route('tracers.store') }}" method="POST">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                There were some problems with your input.<br><br>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        <form action="{{ route('form.userSatisfactionStore') }}" method="POST">
             @csrf
+
+            <input type="hidden" name="tracer_id" value="{{$tracer->id}}">
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
+                        <strong style="display: inline-block; margin-bottom:10px">Jurusan?</strong> <br>
+                        <select name="major_id" required>
+                            <option value="" selected disabled>-- Pilih --</option>
+                            @foreach ($majorTypes as $majorType)
+                                @foreach ($majorType->major as $major)
+                                    <option value="{{$major->id}}">{{$majorType->name .' - '. $major->name}}</option>
+                                @endforeach
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
 
             @foreach ($questions as $question)
                 <div class="row">
@@ -29,6 +61,11 @@
                     </div>
                 </div>
             @endforeach
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
         </form>
     @endif
     

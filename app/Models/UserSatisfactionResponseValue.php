@@ -19,7 +19,7 @@ class UserSatisfactionResponseValue extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_satisfaction_id',
+        'user_satisfaction_response_id',
         'user_satisfaction_indicator_id',
         'user_satisfaction_option_id'
     ];

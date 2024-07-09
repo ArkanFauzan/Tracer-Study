@@ -53,4 +53,10 @@ class Major extends Model
             $model->id = (string) Str::uuid();
         });
     }
+
+    public function majorType()
+    {
+        return $this->belongsTo(MajorType::class);
+    }
+
 }
