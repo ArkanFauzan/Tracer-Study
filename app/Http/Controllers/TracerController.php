@@ -18,8 +18,40 @@ class TracerController extends Controller
     {
         $query = $request->query();
         $count = Tracer::count();
+
+        // idx = column order in datatable
+        // value = the value is column name in database
+        // modify orderable column in frontend
+        $columns = [
+            'no',
+            'name',
+            'description',
+            'valid_until',
+            'form_link',
+            'action'
+        ];
+
+        $orderBy = null;
+        $order = null;
+        $tracers = [];
+
+        if (!empty($query['order'])) { // if exist sortable
+
+            $orderBy = $columns[ $query['order'][0]['column'] ];
+            $order = $query['order'][0]['dir'];
+
+            if (in_array($orderBy, ['no', 'form_link', 'action'])) { // disabled sortable
+                $orderBy = $order = null;
+            }
+        }
+
+        if ($orderBy && $order) {
+            $tracers = Tracer::orderBy($orderBy, strtoupper($order))->skip((int)$query['start'])->take((int)$query['length'])->get();
+        }
+        else {
+            $tracers = Tracer::skip((int)$query['start'])->take((int)$query['length'])->get();
+        }
         
-        $tracers = Tracer::orderBy('valid_until', 'DESC')->get();
         $result = [];
 
         foreach ($tracers as $key => $tracer) {
