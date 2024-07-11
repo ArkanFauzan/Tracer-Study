@@ -80,8 +80,13 @@ class QuestionOptionsTableSeeder extends Seeder
     private function seedQuestion() {
 
         $questionWithOption = $this->getQuestionWithOption();
+        global $time;
+        $time = time();
         $questions = array_map(function($val){
+            global $time; $time++;
+            
             unset($val['options']);
+            $val['created_at'] = date('Y-m-d H:i:s', $time); // for ordering question by created at
             return $val;
         }, $questionWithOption);
 
