@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function () {
         })->name('dashboard');
 
         Route::get('user-satisfaction', [FormController::class, 'userSatisfactionResult'])->name('userSatisfaction.index');
+        Route::get('user-satisfaction/export', [FormController::class, 'userSatisfactionResultExport'])->name('userSatisfaction.export');
         
         Route::get('tracers/datatable', [TracerController::class, 'datatable'])->name('tracers.datatable');
         Route::resource('tracers', TracerController::class);

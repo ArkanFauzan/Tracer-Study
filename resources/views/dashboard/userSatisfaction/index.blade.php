@@ -19,7 +19,7 @@
                         <select name="tracer_id">
                             <option value="" selected>-- Pilih Tracer --</option>
                             @foreach($tracers as $tracer)
-                                <option value="{{$tracer->id}}" {{$tracer->id === $tracer_id ? 'selected' : ''}}>{{$tracer->name}}</option>
+                                <option value="{{$tracer->id}}" {{$tracer->id === $tracer_id ? 'selected' : ''}}>{{strtoupper($tracer->name)}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -28,7 +28,7 @@
                             <option value="" selected>-- Pilih Major  --</option>
                             @foreach ($majorTypes as $majorType)
                                 @foreach ($majorType->major as $major)
-                                    <option value="{{$major->id}}">{{$majorType->name .' - '. $major->name}}</option>
+                                    <option value="{{$major->id}}" {{$major->id === $major_id ? 'selected' : ''}}>{{$majorType->name .' - '. $major->name}}</option>
                                 @endforeach
                             @endforeach
                         </select>
@@ -36,6 +36,18 @@
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary" style="height: 100%">Filter</button>
                     </div>
+
+                    @php
+                        $queryString = preg_replace("/.*?\?/i", '', $_SERVER['REQUEST_URI']);
+                        $queryString = empty($queryString) ? '' : "?$queryString";
+                    @endphp
+                    <div class="form-group">
+                        <a href="{{ route('userSatisfaction.export') . $queryString}}" class="btn btn-info" style="height: 100%">Export Excel</a>
+                    </div>
+                    <div class="form-group">
+                        <a href="{{ route('userSatisfaction.export') . $queryString}}" class="btn btn-info" style="height: 100%">Export Pdf</a>
+                    </div>
+
                 </div>
             </form>
 
@@ -43,7 +55,7 @@
                 <thead>
                     <tr class="bg-primary text-white">
                         <th>No</th>
-                        <th>Indicator</th>
+                        <th>Indikator</th>
                         @foreach($result['optionsPercentage'] as $val)
                             <th class="text-center">{{$val['option']}}</th>
                         @endforeach
