@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
         })->name('dashboard');
 
         Route::get('tracer-study', [FormController::class, 'tracerStudyResult'])->name('tracerStudy.index');
-        Route::get('tracer-study/export', [FormController::class, 'tracerStudyResultExport'])->name('tracerStudy.export');
+        // Route::get('tracer-study/export', [FormController::class, 'tracerStudyResultExport'])->name('tracerStudy.export');
         Route::get('user-satisfaction', [FormController::class, 'userSatisfactionResult'])->name('userSatisfaction.index');
         Route::get('user-satisfaction/export-excel', [FormController::class, 'userSatisfactionResultExportExcel'])->name('userSatisfaction.exportExcel');
         Route::get('user-satisfaction/export-pdf', [FormController::class, 'userSatisfactionResultExportPdf'])->name('userSatisfaction.exportPdf');

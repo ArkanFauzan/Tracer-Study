@@ -122,7 +122,59 @@ class FormController extends Controller
 
     public function tracerStudyResult(Request $request)
     {
+        // filter tracer
+        $tracers = Tracer::all();
+        $tracer_id = !empty($request->query()['tracer_id']) ? $request->query()['tracer_id'] : '';
 
+        // filter major
+        $majorTypes = MajorType::with(['major' => function ($query) {
+            $query->orderBy('name', 'asc');
+        }])
+        ->orderBy('created_at', 'asc')->get();
+        $major_id = !empty($request->query()['major_id']) ? $request->query()['major_id'] : '';
+
+        // define result variable
+        $result = [];
+
+        // start: sebaranTargetRespondenPerProgramPendidikan
+        $result['sebaranTargetRespondenPerProgramPendidikan'] = [
+            'title' => 'Sebaran Target Responden Per Program Pendidikan',
+            'labels' => [],
+            'data' => []
+        ];
+
+        $query = ResponseGraduate::select(DB::raw('count(*) as total, major_types.name as name, major_types.id as id'));
+        if (!empty($tracer_id) || !empty($major_id)) {
+            if (!empty($tracer_id)) {
+                $query->where('tracer_id', $tracer_id);
+            }
+            if (!empty($major_id)) {
+                $query->where('major_id', $major_id);
+            }
+        }
+        $query->join('majors', 'response_graduates.major_id', '=', 'majors.id');
+        $query->join('major_types', 'majors.major_type_id', '=', 'major_types.id');
+        $sebaranTargetRespondenPerProgramPendidikan = $query->groupBy('major_types.id')->get();
+
+        $data = [];
+        foreach ($majorTypes as $majorType) { // initial data (all 0)
+            $data[$majorType->id] = [
+                'labels' => $majorType->name,
+                'data' => 0
+            ];
+        }
+        foreach ($sebaranTargetRespondenPerProgramPendidikan as $val) { // fill with actual result data
+            if (!empty($data[$val->id])) {
+                $data[$val->id]['data'] = $val->total;
+            }
+        }
+        foreach ($data as $value) { // mapping to result variable
+            $result['sebaranTargetRespondenPerProgramPendidikan']['labels'][] = $value['labels'];
+            $result['sebaranTargetRespondenPerProgramPendidikan']['data'][] = $value['data'];
+        }
+        // end: sebaranTargetRespondenPerProgramPendidikan
+
+        return view('dashboard.tracerStudy.index', ['title' => 'Tracer Study', ...compact('result','tracers','majorTypes','tracer_id','major_id')]);
     }
 
     public function tracerStudyResultExport(Request $request)
