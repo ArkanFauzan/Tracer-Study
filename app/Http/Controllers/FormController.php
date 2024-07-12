@@ -15,6 +15,8 @@ use App\Models\ResponseGraduateQuestion;
 use App\Models\ResponseGraduateQuestionAnswer;
 use App\Models\UserSatisfactionResponse;
 use App\Models\UserSatisfactionResponseValue;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\App;
 
 class FormController extends Controller
 {
@@ -280,7 +282,7 @@ class FormController extends Controller
         return view('dashboard.userSatisfaction.index', $result);
     }
 
-    public function userSatisfactionResultExport(Request $request)
+    public function userSatisfactionResultExportExcel(Request $request)
     {
         $data = $this->getUserSatisfactionVariable($request);
 
@@ -366,6 +368,90 @@ class FormController extends Controller
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save('php://output');
         exit;
+    }
+
+    public function userSatisfactionResultExportPdf(Request $request)
+    {
+        $data = $this->getUserSatisfactionVariable($request);
+
+        $totalColumn = 2 + count($data['result']['optionsPercentage']);
+        
+        $tableTitle = "";
+        
+        if (!empty($data['tracer_id'])) { // from query string
+            foreach ($data['tracers'] as $tracer) {
+                if ($tracer->id === $data['tracer_id']) {
+                    $tableTitle .= "<tr><td colspan='$totalColumn'>Tracer : ".strtoupper($tracer->name)."</td></tr>";
+                }
+            }
+        }
+        else {
+            $tableTitle .= "<tr><td colspan='$totalColumn'>Tracer : ALL</td></tr>";
+        }
+
+        if (!empty($data['major_id'])) { // from query string
+            foreach ($data['majorTypes'] as $majorType) {
+                foreach ($majorType->major as $major) {
+                    if ($major->id === $data['major_id']) {
+                        $tableTitle .= "<tr><td colspan='$totalColumn'>Major : {$majorType->name} - {$major->name}</td></tr>";
+                    }
+                }
+            }
+        }
+        else {
+            $tableTitle .= "<tr><td colspan='$totalColumn'>Major : ALL</td></tr>";
+        }
+
+        $tableHead = "
+            <thead>
+                <tr>
+                    <th style='width:5%'>No</th>
+                    <th style='width:20%'>Indikator</th>
+                    ".implode('', array_map(function($val){
+                        return "<th>{$val['option']}</th>";
+                    }, $data['result']['optionsPercentage']))."
+                </tr>
+            </thead>
+        ";
+
+        global $i;
+        $i = 0;
+        $tableBody = "
+            <tbody>
+                ".implode('', array_map(function($indicatorName, $indicator_id) use($data){
+                    global $i;
+                    $i++;
+
+                    $value = "";
+                    foreach ($data['result']['optionsPercentage'] as $val){
+                        $value .= "<th>{$val['data'][$indicator_id]} %</th>";
+                    }
+                    return "
+                        <tr>
+                            <td>".($i)."</td>
+                            <td>{$indicatorName}</td>
+                            {$value}
+                        </tr>
+                    ";
+                }, $data['result']['indicators'], array_keys($data['result']['indicators'])))."
+
+                <tr>
+                    <td colspan='2'>Rata-Rata</td>
+                    ".implode('', array_map(function($val){
+                        return "<th> {$val['average']} %</th>";
+                    }, $data['result']['optionsPercentage']))."
+                </tr>
+            </tbody>
+        ";
+
+        $table = "
+            <style>table, th, td {border: 1px solid black;border-collapse: collapse;}</style>
+            <table border='1' style='width:100%'>$tableTitle $tableHead $tableBody</table>
+        ";
+
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadHTML($table)->setPaper('a4', 'portrait');
+        return $pdf->download('user-satisfaction.pdf');
     }
 
     /**

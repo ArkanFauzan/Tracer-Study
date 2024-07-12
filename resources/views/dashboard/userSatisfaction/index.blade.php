@@ -43,10 +43,10 @@
                         $queryString = empty($queryString) ? '' : "?$queryString";
                     @endphp
                     <div class="form-group">
-                        <a href="{{ route('userSatisfaction.export') . $queryString}}" class="btn btn-info" style="height: 100%">Export Excel</a>
+                        <a href="{{ route('userSatisfaction.exportExcel') . $queryString}}" class="btn btn-info" style="height: 100%">Export Excel</a>
                     </div>
                     <div class="form-group">
-                        <a href="{{ route('userSatisfaction.export') . $queryString}}" class="btn btn-info" style="height: 100%">Export Pdf</a>
+                        <a href="{{ route('userSatisfaction.exportPdf') . $queryString}}" class="btn btn-info" style="height: 100%">Export Pdf</a>
                     </div>
 
                 </div>
