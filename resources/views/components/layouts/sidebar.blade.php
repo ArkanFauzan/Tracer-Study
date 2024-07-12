@@ -18,6 +18,12 @@
             <span>Dashboard</span></a>
     </li>
 
+    <li class="nav-item {{ Route::is('tracerStudy.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{route('tracerStudy.index')}}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Tracer Study</span></a>
+    </li>
+
     <li class="nav-item {{ Route::is('userSatisfaction.*') ? 'active' : '' }}">
         <a class="nav-link" href="{{route('userSatisfaction.index')}}">
             <i class="fas fa-fw fa-tachometer-alt"></i>

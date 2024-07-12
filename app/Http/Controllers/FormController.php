@@ -9,6 +9,10 @@ use App\Models\Tracer;
 use App\Models\UserSatisfactionIndicator;
 use App\Models\UserSatisfactionOption;
 use App\Models\MajorType;
+use App\Models\Question;
+use App\Models\ResponseGraduate;
+use App\Models\ResponseGraduateQuestion;
+use App\Models\ResponseGraduateQuestionAnswer;
 use App\Models\UserSatisfactionResponse;
 use App\Models\UserSatisfactionResponseValue;
 
@@ -16,9 +20,112 @@ class FormController extends Controller
 {
     public function tracerStudy(string $id)
     {
-        Tracer::find($id);
-        $form = [];
-        return view('form.tracer_study', ['title' => 'Tracers']);
+        // Query to fetch records
+        $tracer = $this->getTracer($id);
+
+        if (!$tracer) {
+            return view('form.tracer_study', ['invalidForm' => true]);
+        }
+
+        $majorTypes = MajorType::with(['major' => function ($query) {
+            $query->orderBy('name', 'asc');
+        }])
+        ->orderBy('created_at', 'asc')->get();
+
+        $questions = Question::with(
+            [
+                'questionType' => function ($query) {
+                    $query->orderBy('created_at', 'asc');
+                },
+                'questionSection' => function ($query) {
+                    $query->orderBy('created_at', 'asc');
+                },
+                'questionOptions' => function ($query) {
+                    $query->orderBy('created_at', 'asc');
+                },
+            ]
+        )
+        ->orderBy('created_at', 'ASC')->get();
+        $questionsAssoc = [];
+        foreach ($questions as $question) {
+            $questionsAssoc[$question->id] = [
+                'question' => $question->question,
+                'questionType' => $question->questionType->type,
+                'questionOptions' => $question->questionOptions,
+            ];
+        }
+
+        return view('form.tracer_study', [
+            'title' => 'Form Tracer Study', 
+            'questions' => $questionsAssoc, 
+            'tracer' => $tracer,
+            'majorTypes' => $majorTypes
+        ]);
+    }
+
+    public function tracerStudyStore(Request $request)
+    {
+        // validate tracer (must valid and not expired)
+        $tracer = $this->getTracer($request->tracer_id);
+        if (!$tracer) {
+            return view('form.tracer_study', ['invalidForm' => true]);
+        }
+
+        $requestData = $request->all();
+
+        $responseGraduate = ResponseGraduate::create([
+            'tracer_id' => $tracer->id,
+            'major_id' => $requestData['major_id'],
+        ]);
+
+        // predifined, freetext input
+        $freetextInput = [
+            '1897cfad-9b30-47aa-b7bc-257b262983d2', // tahun lulus
+            'a34de7b6-f2c6-408c-ac7f-4c6601d0edcf', // ipk
+            'b3ea5c8a-1ddc-43e8-bbb3-83d90498a499' // lama studi
+        ];
+        
+        foreach ($requestData as $question_id => $answer) {
+            if (in_array($question_id, ['_token', 'tracer_id', 'major_id'])) {
+                continue;
+            }
+
+            $isFreetextInput = in_array($question_id, $freetextInput);
+
+            $responseGraduateQuestion = ResponseGraduateQuestion::create([
+                'response_graduate_id' => $responseGraduate->id,
+                'question_id' => $question_id,
+                'answer' => $isFreetextInput ? $answer : null
+            ]);
+
+            if (!$isFreetextInput) {
+                $arrAnswer = is_array($answer) ? $answer : [$answer];
+                foreach ($arrAnswer as $value) {
+                    ResponseGraduateQuestionAnswer::create([
+                        'response_graduate_question_id' => $responseGraduateQuestion->id,
+                        'question_option_id' => $value,
+                        'can_freetext_answer' => null // currently, not supported yet
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->route('form.tracerStudy', $tracer->id)->with('success', 'success submitted!');
+    }
+
+    private function getTracerStudyVariable(Request $request)
+    {
+
+    }
+
+    public function tracerStudyResult(Request $request)
+    {
+
+    }
+
+    public function tracerStudyResultExport(Request $request)
+    {
+
     }
 
     public function userSatisfaction(string $id)

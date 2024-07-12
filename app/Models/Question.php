@@ -53,4 +53,19 @@ class Question extends Model
             $model->id = (string) Str::uuid();
         });
     }
+
+    public function questionType()
+    {
+        return $this->belongsTo(QuestionType::class);
+    }
+
+    public function questionSection()
+    {
+        return $this->belongsTo(QuestionSection::class);
+    }
+
+    public function questionOptions()
+    {
+        return $this->hasMany(QuestionOption::class);
+    }
 }

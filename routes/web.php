@@ -10,6 +10,7 @@ Route::get('/', function () {
 });
 
 Route::get('/form/tracer-study/{id}', [FormController::class, 'tracerStudy'])->name('form.tracerStudy');
+Route::post('/form/tracer-study', [FormController::class, 'tracerStudyStore'])->name('form.tracerStudyStore');
 Route::get('/form/user-satisfaction/{id}', [FormController::class, 'userSatisfaction'])->name('form.userSatisfaction');
 Route::post('/form/user-satisfaction', [FormController::class, 'userSatisfactionStore'])->name('form.userSatisfactionStore');
 
@@ -24,6 +25,8 @@ Route::middleware('auth')->group(function () {
             return view('dashboard.index', ['title' => 'Dashboard']);
         })->name('dashboard');
 
+        Route::get('tracer-study', [FormController::class, 'tracerStudyResult'])->name('tracerStudy.index');
+        Route::get('tracer-study/export', [FormController::class, 'tracerStudyResultExport'])->name('tracerStudy.export');
         Route::get('user-satisfaction', [FormController::class, 'userSatisfactionResult'])->name('userSatisfaction.index');
         Route::get('user-satisfaction/export', [FormController::class, 'userSatisfactionResultExport'])->name('userSatisfaction.export');
         
