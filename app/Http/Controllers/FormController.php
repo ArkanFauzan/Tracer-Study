@@ -143,7 +143,7 @@ class FormController extends Controller
             'data' => []
         ];
 
-        $query = ResponseGraduate::select(DB::raw('count(*) as total, major_types.name as name, major_types.id as id'));
+        $query = ResponseGraduate::select(DB::raw('count(*) as total, major_types.id as id'));
         if (!empty($tracer_id) || !empty($major_id)) {
             if (!empty($tracer_id)) {
                 $query->where('tracer_id', $tracer_id);
@@ -173,6 +173,46 @@ class FormController extends Controller
             $result['sebaranTargetRespondenPerProgramPendidikan']['data'][] = $value['data'];
         }
         // end: sebaranTargetRespondenPerProgramPendidikan
+
+        // start: sebaranRespondenYangMemberikanJawaban
+        $result['sebaranRespondenYangMemberikanJawaban'] = [
+            'title' => 'Sebaran Responden yang Memberikan Jawaban',
+            'labels' => [],
+            'data' => []
+        ];
+        $data = [];
+        foreach ($majorTypes as $majorType) { // initial data (all 0)
+            foreach ($majorType->major as $major) {
+                $data[$major->id] = [
+                    'labels' => $majorType->name .' - '. $major->name,
+                    'data' => 0
+                ];
+            }
+        }
+
+        $query = ResponseGraduate::select(DB::raw('count(*) as total, majors.id as id'));
+        if (!empty($tracer_id) || !empty($major_id)) {
+            if (!empty($tracer_id)) {
+                $query->where('tracer_id', $tracer_id);
+            }
+            if (!empty($major_id)) {
+                $query->where('major_id', $major_id);
+            }
+        }
+        $query->join('majors', 'response_graduates.major_id', '=', 'majors.id');
+        $sebaranRespondenYangMemberikanJawaban = $query->groupBy('majors.id')->get();
+
+        foreach ($sebaranRespondenYangMemberikanJawaban as $val) { // fill with actual result data
+            if (!empty($data[$val->id])) {
+                $data[$val->id]['data'] = $val->total;
+            }
+
+        }
+        foreach ($data as $value) { // mapping to result variable
+            $result['sebaranRespondenYangMemberikanJawaban']['labels'][] = $value['labels'];
+            $result['sebaranRespondenYangMemberikanJawaban']['data'][] = $value['data'];
+        }
+        // end: sebaranRespondenYangMemberikanJawaban
 
         return view('dashboard.tracerStudy.index', ['title' => 'Tracer Study', ...compact('result','tracers','majorTypes','tracer_id','major_id')]);
     }

@@ -38,9 +38,15 @@
                 </div>
             </form>
 
-            <div class="w-50 p-3">
-                <h3 class="text-center">Sebaran Target Responden Per Program Pendidikan</h3>
-                <canvas id="sebaranTargetRespondenPerProgramPendidikan"></canvas>
+            <div class="d-flex justify-content-center">
+                <div class="w-50 p-3 text-center">
+                    <h3 class="text-center">Sebaran Target Responden Per Program Pendidikan</h3>
+                    <canvas id="sebaranTargetRespondenPerProgramPendidikan"></canvas>
+                </div>
+            </div>
+            <div class="w-100 p-3 mt-5">
+                <h3 class="text-center">Sebaran Responden yang Memberikan Jawaban</h3>
+                <canvas id="sebaranRespondenYangMemberikanJawaban"></canvas>
             </div>
 
         </div>
@@ -68,17 +74,53 @@
         <script>
             const result = {!! json_encode($result) !!};
 
+            // Chart.defaults.global.maintainAspectRatio = false;
+
             const sebaranTargetRespondenPerProgramPendidikan = document.getElementById('sebaranTargetRespondenPerProgramPendidikan');
             new Chart(sebaranTargetRespondenPerProgramPendidikan, {
                 type: 'pie',
                 data: {
                     labels: result.sebaranTargetRespondenPerProgramPendidikan.labels,
                     datasets: [{
-                        label: result.sebaranTargetRespondenPerProgramPendidikan.title,
+                        label: 'Jumlah',
                         data: result.sebaranTargetRespondenPerProgramPendidikan.data,
                         backgroundColor: CHART_COLORS,
                         hoverOffset: 4
                     }]
+                },
+            });
+
+            const sebaranRespondenYangMemberikanJawaban = document.getElementById('sebaranRespondenYangMemberikanJawaban');
+            new Chart(sebaranRespondenYangMemberikanJawaban, {
+                type: 'bar',
+                data: {
+                    labels: result.sebaranRespondenYangMemberikanJawaban.labels,
+                    datasets: [{
+                        label: 'Data',
+                        data: result.sebaranRespondenYangMemberikanJawaban.data,
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    // Elements options apply to all of the options unless overridden in a dataset
+                    // In this case, we are setting the border of each horizontal bar to be 2px wide
+                    elements: {
+                        bar: {
+                            borderWidth: 2,
+                        }
+                    },
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        title: {
+                            display: false,
+                            text: result.sebaranRespondenYangMemberikanJawaban.title
+                        }
+                    }
                 },
             });
         </script>
