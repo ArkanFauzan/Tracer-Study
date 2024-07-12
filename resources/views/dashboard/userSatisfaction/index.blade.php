@@ -39,6 +39,7 @@
 
                     @php
                         $queryString = preg_replace("/.*?\?/i", '', $_SERVER['REQUEST_URI']);
+                        $queryString = $queryString === $_SERVER['REQUEST_URI'] ? '' : $queryString;
                         $queryString = empty($queryString) ? '' : "?$queryString";
                     @endphp
                     <div class="form-group">
